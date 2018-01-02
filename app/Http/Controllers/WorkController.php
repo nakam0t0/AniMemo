@@ -42,7 +42,7 @@ class WorkController extends Controller
             }
         }
 
-        // 絞って行く ページネーションとコレクションの両立ができない
+        // // 絞って行く ページネーションとコレクションの両立ができない
         // $works = Work::all();
         // if ($request->has('year')) {
         //     $works = $works->where('year', $year);
@@ -53,6 +53,7 @@ class WorkController extends Controller
         // if ($request->has('title')) {
         //     $works = $works->where('title', 'LIKE', '%' . $title . '%');
         // }
+        // $works = $works->paginate(32);
 
         if ($request->has('year')) {
             if ($cours != 0) {
