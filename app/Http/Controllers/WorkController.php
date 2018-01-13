@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Work;
+use App\State;
+use App\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
@@ -55,6 +57,7 @@ class WorkController extends Controller
         // }
         // $works = $works->paginate(32);
 
+        // 上の代わり
         if ($request->has('year')) {
             if ($cours != 0) {
                 if ($request->has('title')) {
@@ -155,7 +158,11 @@ class WorkController extends Controller
      */
     public function show(Work $work)
     {
-        //
+        $reviews = Review::where('work_id', $work->id)->get();
+        $cur_num = State::where('state', 1)->where('work_id', $work->id)->count();
+        $arc_num = State::where('state', 2)->where('work_id', $work->id)->count();
+        $fav_num = State::where('state', 3)->where('work_id', $work->id)->count();
+        return view('works.show', ['work' => $work, 'reviews' => $reviews, 'cur_num' => $cur_num, 'arc_num' => $arc_num, 'fav_num' => $fav_num]);
     }
 
     /**

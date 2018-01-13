@@ -23,9 +23,9 @@
         <h3>該当作品なし</h3>
         @endif
         @foreach ($works as $work)
-        <div class="col-xs-6 col-md-3">
+        <div class="col-xs-12 col-md-4">
             <div class="thumbnail">
-                <a href="#">
+                <a href="{{ route('works.show', ['id'=> $work->id]) }}">
                     <div class="media">
                         <div class="media-left">
                             <img src="{{ $work->image_path }}" width="64" height="64" alt="">
@@ -42,17 +42,17 @@
                         {{ csrf_field() }}
                         <div class="btn-group btn-group-justified" role="group">
                             <div class="btn-group" role="group">
-                                <button class="btn btn-success btn-sm {{ isActiveState($work->id, 1) }}" formaction="{{ route('states.store', ['work_id' => $work->id, 'state' => 1]) }}">
+                                <button class="btn btn-success {{ isActiveState($work->id, 1) }}" formaction="{{ route('states.store', ['work_id' => $work->id, 'state' => 1, 'active' => isActiveState($work->id, 1)]) }}">
                                     <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
                                 </button>
                             </div>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-success btn-sm {{ isActiveState($work->id, 2) }}" formaction="{{ route('states.store', ['work_id' => $work->id, 'state' => 2]) }}" >
+                                <button class="btn btn-success {{ isActiveState($work->id, 2) }}" formaction="{{ route('states.store', ['work_id' => $work->id, 'state' => 2, 'active' => isActiveState($work->id, 2)]) }}" >
                                     <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                                 </button>
                             </div>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-success btn-sm {{ isActiveState($work->id, 3) }}" formaction="{{ route('states.store', ['work_id' => $work->id, 'state' => 3]) }}">
+                                <button class="btn btn-success {{ isActiveState($work->id, 3) }}" formaction="{{ route('states.store', ['work_id' => $work->id, 'state' => 3, 'active' => isActiveState($work->id, 3)]) }}">
                                     <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                                 </button>
                             </div>

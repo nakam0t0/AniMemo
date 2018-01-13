@@ -54,7 +54,7 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="{{ route('home') }}">
+                                        <a href="{{ url('users/' . Auth::id()) }}">
                                             Home
                                         </a>
                                     </li>

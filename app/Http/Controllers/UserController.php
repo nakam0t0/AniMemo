@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Work;
+use App\State;
+use App\Follow;
+use App\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 class UserController extends Controller
 {
@@ -56,7 +62,24 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $curious_work_ids = State::where('state', 1)->where('user_id', $user->id)->pluck('work_id');
+        $curiosities = Work::whereIn('id', $curious_work_ids)->get();
+
+        $archive_work_ids = State::where('state', 2)->where('user_id', $user->id)->pluck('work_id');
+        $archives = Work::whereIn('id', $archive_work_ids)->get();
+
+        $favorite_work_ids = State::where('state', 3)->where('user_id', $user->id)->pluck('work_id');
+        $favorites = Work::whereIn('id', $favorite_work_ids)->get();
+
+        $review_work_ids = Review::where('user_id', $user->id)->pluck('work_id');
+        $reviews = Work::whereIn('id', $review_work_ids)->get();
+
+        if (Follow::where('user_id', auth::id())->where('followed_user_id', $user->id)->count()) {
+            $follow = 'follow';
+        } else {
+            $follow = 'unfollow';
+        }
+        return view('users.show', ['user' => $user, 'curiosities' => $curiosities, 'archives' => $archives, 'favorites' => $favorites, 'reviews' => $reviews, 'follow' => $follow]);
     }
 
     /**

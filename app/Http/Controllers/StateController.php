@@ -48,15 +48,15 @@ class StateController extends Controller
      */
     public function store(Request $request)
     {
-        // $year = $request->input('year');
-        // $cours = $request->input('cours');
-        // $title = $request->input('title');
-        $page = $request->input('page');
-
-        $state = State::updateOrCreate(
-            ['user_id' => Auth::id(), 'work_id' => $request->work_id],
-            ['state' => $request->state]
-        );
+        $work_id = $request->work_id;
+        if ($request->has('active')) {
+            State::where('user_id', Auth::id())->where('work_id', $work_id)->delete();
+        } else {
+            State::updateOrCreate(
+                ['user_id' => Auth::id(), 'work_id' => $work_id],
+                ['state' => $request->state]
+            );
+        }
         return back()->withInput();
     }
 
