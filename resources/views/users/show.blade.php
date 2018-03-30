@@ -2,13 +2,19 @@
 
 @section('content')
     <div class="container">
-        <h1>{{ $user->name }} さん</h1>
-        <form method="post" action="{{ route('follows.store', ['followed_user_id' => $user->id, 'active' => isFollowing($user->id)]) }}">
-            {{ csrf_field() }}
-            <button class="btn btn-success {{ isFollowing($user->id) }}">
-                {{ $follow }}
-            </button>
-        </form>
+        <h1 class="inline">{{ $user->name }}</h1>
+        @if ($user->id == Auth::id())
+            <a class="btn btn-success inline" href="{{ route('users.edit', ['id' => $user->id])}}">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Setting
+            </a>
+        @else
+            <form class="inline" method="post" action="{{ route('follows.store', ['followed_user_id' => $user->id, 'active' => isFollowing($user->id)]) }}">
+                {{ csrf_field() }}
+                <button class="btn btn-success {{ isFollowing($user->id) }}">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ $follow }}
+                </button>
+            </form>
+        @endif
         <div class="panel panel-default">
             <div class="panel-heading">
                 きになる

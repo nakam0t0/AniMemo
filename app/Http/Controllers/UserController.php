@@ -74,10 +74,10 @@ class UserController extends Controller
         $review_work_ids = Review::where('user_id', $user->id)->pluck('work_id');
         $reviews = Work::whereIn('id', $review_work_ids)->get();
 
-        if (Follow::where('user_id', auth::id())->where('followed_user_id', $user->id)->count()) {
-            $follow = 'follow';
+        if (Follow::where('user_id', auth::id())->where('followed_user_id', $user->id)->count() == 0) {
+            $follow = 'Follow';
         } else {
-            $follow = 'unfollow';
+            $follow = 'UnFollow';
         }
         return view('users.show', ['user' => $user, 'curiosities' => $curiosities, 'archives' => $archives, 'favorites' => $favorites, 'reviews' => $reviews, 'follow' => $follow]);
     }
@@ -90,7 +90,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view('users.edit', ['user' => $user]);
     }
 
     /**
@@ -102,7 +102,13 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $user = User::where('id', $user->id)->update([
+            'name' => $request->name,
+            'image_path' => $request->image_path,
+            'email' => $request->email,
+            'password' => $request->password
+        ]);
+        return redirect()->route('users.show', [$user]);
     }
 
     /**

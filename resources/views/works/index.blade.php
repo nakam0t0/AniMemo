@@ -5,7 +5,7 @@
     <div class="tac">
         <div class="input-group my_box">
             <form action="{{ route('works.index') }}">
-                <input type="number" name="year" min="2014" max="2017" @if ($year) {{ "value=" . $year }} @endif>
+                <input type="number" name="year" min="2014" max="{{ getdate()['year'] }}" @if ($year) {{ "value=" . $year }} @endif>
                 <select name="cours">
                     <option value="0" @if ($cours == 0) {{ "selected" }} @endif>-</option>
                     <option value="1" @if ($cours == 1) {{ "selected" }} @endif>冬</option>

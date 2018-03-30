@@ -113,22 +113,26 @@ class WorkController extends Controller
             $url = 'http://api.moemoe.tokyo/anime/v1/master/' . $year . '/' . $cours;
             $obj = file_get_contents($url);
             $data = json_decode($obj);
-            foreach ($data as $data) {
-                if (Work::where('title', $data->title)->where('year', $year)->where('cours', $cours)->count() != 0) {
-                    continue;
+            if ($data) {
+                foreach ($data as $data) {
+                    if (Work::where('title', $data->title)->where('year', $year)->where('cours', $cours)->count() != 0) {
+                        continue;
+                    }
+                    $work = new Work;
+                    $work->title = $data->title;
+                    $work->image_path = $this->getImagePath($data->twitter_account);
+                    $work->title_short1 = $data->title_short1;
+                    $work->title_short2 = $data->title_short2;
+                    $work->title_short3 = $data->title_short3;
+                    $work->year = $year;
+                    $work->cours = $cours;
+                    $work->public_url = $data->public_url;
+                    $work->twitter_account = $data->twitter_account;
+                    $work->twitter_hash_tag = $data->twitter_hash_tag;
+                    $work->save();
                 }
-                $work = new Work;
-                $work->title = $data->title;
-                $work->image_path = $this->getImagePath($data->twitter_account);
-                $work->title_short1 = $data->title_short1;
-                $work->title_short2 = $data->title_short2;
-                $work->title_short3 = $data->title_short3;
-                $work->year = $year;
-                $work->cours = $cours;
-                $work->public_url = $data->public_url;
-                $work->twitter_account = $data->twitter_account;
-                $work->twitter_hash_tag = $data->twitter_hash_tag;
-                $work->save();
+            } else {
+                break;
             }
         }
     }
@@ -138,12 +142,13 @@ class WorkController extends Controller
         $client = new Client([env('API_KEY'), env('API_SECRET'), env('ACCESS_TOKEN'), env('ACCESS_TOKEN_SECRET')]);
         try {
             $obj = $client->get('show/user', ['screen_name' => $account]);
+            sleep(10);
         } catch (\RuntimeException $e) {
             return '/images/white.jpg';
         }
         $url = json_decode($obj)->profile_image_url;
         $image = Image::make(file_get_contents($url));
-        $file = $account . '.jpg';
+        $file = $account . '.png';
         $path = '/images/' . $file;
         if (!file_exists(public_path($path))) {
             $image->save(public_path($path));
